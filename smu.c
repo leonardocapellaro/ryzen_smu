@@ -8,6 +8,19 @@
 #include <linux/pci.h>
 #include <asm/io.h>
 
+/* The CPUID accessors moved around between kernel releases:
+ *  - old kernels: asm/processor.h pulled in asm/cpuid.h
+ *  - newer kernels: asm/cpuid.h was split into asm/cpuid/api.h
+ * Include the right one depending on what the kernel provides.
+ */
+#if __has_include(<asm/cpuid/api.h>)
+#include <asm/cpuid/api.h>
+#elif __has_include(<asm/cpuid.h>)
+#include <asm/cpuid.h>
+#else
+#include <asm/processor.h>
+#endif
+
 #include "smu.h"
 
 static struct {
